@@ -1,0 +1,26 @@
+{
+  "name": "native-script-map",
+  "version": "0.0.1",
+  "description": "Low level string maps with chunking and regex checks.",
+  "main": "test.js",
+  "scripts": {
+    "test": "mocha",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sp3c1/native-script-map.git"
+  },
+  "keywords": [
+    "native",
+    "string",
+    "map"
+  ],
+  "author": "bspecjalny@gmail.com",
+  "license": "GPL-3.0",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/sp3c1/native-script-map/issues"
+  },
+  "homepage": "https://github.com/sp3c1/native-script-map#readme"
+}
