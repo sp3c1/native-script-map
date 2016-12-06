@@ -18,6 +18,8 @@ class stringLowLevelLib{
         void removeVector(const int index);
         std::string chunkData(const int index, int start, int end);
 
+        int size();
+
         stringLowLevelLib();
         ~stringLowLevelLib();
 

@@ -38,6 +38,10 @@ std::string stringLowLevelLib::chunkData(const int index, int start, int end){
     }
 }
 
+int stringLowLevelLib::size(){
+    return (int) strVec.size();
+} 
+
 stringLowLevelLib::stringLowLevelLib(){
 
 }

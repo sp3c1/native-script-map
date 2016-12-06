@@ -2,16 +2,13 @@
 #define STRINGLOWLEVEL_H
 
 #include <node.h>
-using namespace v8;
+#include "string-low-level-lib-wrapper.h"
 
-void Method(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
-  args.GetReturnValue().Set(String::NewFromUtf8(isolate, "world"));
-}
+using v8::Local;
+using v8::Object;
 
-void init(Handle<Object> exports) {
-  NODE_SET_METHOD(exports, "hello", Method);
+void InitAll(Local<Object> exports) {
+  stringLowLevelLibWrapper::Init(exports);
 }
 
 #endif
