@@ -3,7 +3,7 @@
 long long int stringLowLevelLib::pushVector(const std::string text){
     long long int key = 0;
 
-    #ifdef _WIN32 || _WIN64
+    //#ifdef _WIN32 || _WIN64
         timeb tb;
         ftime(&tb);
         int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
@@ -12,7 +12,7 @@ long long int stringLowLevelLib::pushVector(const std::string text){
         time(&seconds);
 
         key = (long long int)(seconds * 1000 + nCount);
-     #endif
+     //#endif
 
     strVec.insert(std::pair<long long int, std::string>(key, text));
     return key;

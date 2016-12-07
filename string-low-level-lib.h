@@ -8,6 +8,7 @@
 
 #ifdef TARGET_OS_MAC
   // Mac Includes Here
+  #include "sys/timeb.h"
 #endif
 
 #ifdef __linux__
