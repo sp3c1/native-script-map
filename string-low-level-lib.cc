@@ -18,41 +18,76 @@ long long int stringLowLevelLib::pushVector(const std::string text){
 }
 
 void stringLowLevelLib::appendVector(const long long int index, const std::string text){
-    strVec.at(index).append(text);
+    try{
+        strVec.at(index).append(text);
+    }catch(...){
+        throw false;
+    }
 }
 
 std::string stringLowLevelLib::lookUpVector(const long long int index){
     try{ 
         return strVec.at(index);
     }catch(...){
-        return "";
+        throw false;
     }
 }
 
 bool stringLowLevelLib::regexVector(const long long int index, const  char regex[]){
+    
     try{
-        return std::regex_match (strVec.at(index), std::regex(regex) );
+        return std::regex_search (strVec.at(index), std::regex(regex) );
     }catch(...){
-        return false;
+        throw false;
     }
 }
 
-void stringLowLevelLib::removeVector(const long long int index){
-    strVec.erase(index);
+int stringLowLevelLib::removeVector(const long long int index){
+    //exception handled by wrapper
+    return strVec.erase(index);
 }
 
-std::string stringLowLevelLib::chunkData(const long long int index, int start, int end){    
+std::string stringLowLevelLib::chunkData(const long long int index, int start, int end){
+   
+    if(end<start){
+        std::cout<<"first find";
+        throw false;
+    }
+  
+        
+
     try{ 
-        std::string strToChunk = strVec.at(index).substr(start,end); 
-        return strToChunk;
+        return std::string(strVec.at(index).substr(start,end)); 
     }catch(...){
-        return "";
+        std::cout<<"fck";
+        throw false;
     }
 }
 
 int stringLowLevelLib::size(){
-    return (int) strVec.size();
+    try{
+        return (int) strVec.size();
+    }catch(...){
+        throw false;
+    }
 } 
+
+int stringLowLevelLib::sizeAt(const long long int index){
+    try{
+        return (int) strVec.at(index).size();
+    }catch(...){
+        throw false;
+    }
+}
+
+bool stringLowLevelLib::hasAt(const long long int index){
+    try{
+        strVec.at(index);
+        return true; 
+    }catch(...){
+        return  false;
+    }
+}
 
 void stringLowLevelLib::clear(){
     strVec.clear();

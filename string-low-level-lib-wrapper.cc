@@ -14,6 +14,7 @@ using v8::Persistent;
 using v8::String;
 using v8::Value;
 using v8::Exception;
+using v8::Boolean;
 
 
 
@@ -32,7 +33,7 @@ void stringLowLevelLibWrapper::Init(Local<Object> exports) {
   // Prepare constructor template
   Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
   tpl->SetClassName(String::NewFromUtf8(isolate, "stringLowLevelLibWrapper"));
-  tpl->InstanceTemplate()->SetInternalFieldCount(8);
+  tpl->InstanceTemplate()->SetInternalFieldCount(10);
 
   // Prototype
   NODE_SET_PROTOTYPE_METHOD(tpl, "add", add);
@@ -42,6 +43,8 @@ void stringLowLevelLibWrapper::Init(Local<Object> exports) {
   NODE_SET_PROTOTYPE_METHOD(tpl, "remove", remove);
   NODE_SET_PROTOTYPE_METHOD(tpl, "chunk", chunk);
   NODE_SET_PROTOTYPE_METHOD(tpl, "size", size);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "sizeAt", sizeAt);
+  NODE_SET_PROTOTYPE_METHOD(tpl, "hasIndex", hasIndex);
   NODE_SET_PROTOTYPE_METHOD(tpl, "clear", clear);
 
   constructor.Reset(isolate, tpl->GetFunction());
@@ -108,25 +111,37 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   if (args.Length() != 1) {
-     // Throw an Error that is passed back to JavaScript
         isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
   long long int index = (long long int) args[0]->IntegerValue();
 
-
-  args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
+  try{
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
+  }catch(...){
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));
+  }
 }
 
 void stringLowLevelLibWrapper::regex(const FunctionCallbackInfo<Value>& args) {
-  /*
   Isolate* isolate = args.GetIsolate();
-
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
-  args.GetReturnValue().Set(Number::New(isolate, obj->value_.size()));
-  */
+  if (args.Length() != 2) {
+        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    return;
+  }  
+
+  bool regex;
+  try{
+    regex = obj->value_.regexVector((long long int) args[0]->IntegerValue(),*String::Utf8Value(args[1]->ToString()));
+  }catch(...){
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Regex Exception")));
+    return; 
+  }
+
+  args.GetReturnValue().Set(Boolean::New(isolate, regex));
 }
 
 
@@ -136,23 +151,36 @@ void stringLowLevelLibWrapper::remove(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   if (args.Length() != 1) {
-     // Throw an Error that is passed back to JavaScript
         isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
-  obj->value_.removeVector((long long int) args[0]->IntegerValue());
-
+  int removed;
+  
+  removed = obj->value_.removeVector((long long int) args[0]->IntegerValue());
+  
+  if(removed==0){
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Could not remove provided id")));
+  }
+  
 }
 
 void stringLowLevelLibWrapper::chunk(const FunctionCallbackInfo<Value>& args) {
-  /*
   Isolate* isolate = args.GetIsolate();
+
+  if (args.Length() != 3) {
+        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    return;
+  }
 
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
-  args.GetReturnValue().Set(Number::New(isolate, obj->value_.size()));
-  */
+  try{
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((long long int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
+  }catch(...){
+     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Chunking exception")));
+  }
+  
 }
 
 void stringLowLevelLibWrapper::size(const FunctionCallbackInfo<Value>& args) {
@@ -163,9 +191,39 @@ void stringLowLevelLibWrapper::size(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(Number::New(isolate, obj->value_.size()));
 }
 
-void stringLowLevelLibWrapper::clear(const FunctionCallbackInfo<Value>& args) {
+void stringLowLevelLibWrapper::sizeAt(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
 
+  if (args.Length() != 1) {
+        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    return;
+  }
+
+  stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
+
+  try{
+    args.GetReturnValue().Set(Number::New(isolate, obj->value_.sizeAt((long long int) args[0]->IntegerValue())));
+  }catch(...){
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Element does not exists"))); 
+  }
+  
+}
+
+void stringLowLevelLibWrapper::hasIndex(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  if (args.Length() != 1) {
+        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    return;
+  }
+
+  stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
+
+  
+  args.GetReturnValue().Set(Boolean::New(isolate, obj->value_.hasAt((long long int) args[0]->IntegerValue())));
+}
+
+void stringLowLevelLibWrapper::clear(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   obj->value_.clear();

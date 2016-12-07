@@ -6,6 +6,8 @@
 #include <regex>
 #include "sys/timeb.h"
 
+#include <iostream>
+
 #ifdef TARGET_OS_MAC
     #include "sys/types.h" //for time
 #endif
@@ -22,10 +24,12 @@ class stringLowLevelLib{
         std::string lookUpVector(const long long int index);
         bool regexVector(const long long int index, const  char regex[]);
 
-        void removeVector(const long long int index);
+        int removeVector(const long long int index);
         std::string chunkData(const long long int index, int start, int end);
 
         int size();
+        int sizeAt(const long long int index);
+        bool hasAt(const long long int index);
 
         void clear();
 

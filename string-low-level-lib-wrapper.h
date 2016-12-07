@@ -24,6 +24,8 @@ class stringLowLevelLibWrapper : public node::ObjectWrap {
     static void remove(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void chunk(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void size(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void sizeAt(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void hasIndex(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void clear(const v8::FunctionCallbackInfo<v8::Value>& args);
 };
 
