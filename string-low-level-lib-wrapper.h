@@ -13,10 +13,18 @@ class stringLowLevelLibWrapper : public node::ObjectWrap {
     explicit stringLowLevelLibWrapper();
     ~stringLowLevelLibWrapper();
 
-    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-    static void PlusOne(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);    
     static v8::Persistent<v8::Function> constructor;
     stringLowLevelLib  value_;
+
+    static void add(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void append(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void regex(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void get(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void remove(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void chunk(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void size(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void clear(const v8::FunctionCallbackInfo<v8::Value>& args);
 };
 
 #endif

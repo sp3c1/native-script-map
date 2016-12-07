@@ -1,15 +1,28 @@
 #include "string-low-level-lib.h"
 
-int stringLowLevelLib::pushVector(const std::string text){
-    strVec.push_back(text);
-    return (int)strVec.size();
+long long int stringLowLevelLib::pushVector(const std::string text){
+    long long int key = 0;
+
+    #ifdef _WIN32 || _WIN64
+        timeb tb;
+        ftime(&tb);
+        int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+
+        time_t seconds; 
+        time(&seconds);
+
+        key = (long long int)(seconds * 1000 + nCount);
+     #endif
+
+    strVec.insert(std::pair<long long int, std::string>(key, text));
+    return key;
 }
 
-void stringLowLevelLib::appendVector(const int index, const std::string text){
+void stringLowLevelLib::appendVector(const long long int index, const std::string text){
     strVec.at(index).append(text);
 }
 
-std::string stringLowLevelLib::lookUpVector(const int index){
+std::string stringLowLevelLib::lookUpVector(const long long int index){
     try{ 
         return strVec.at(index);
     }catch(...){
@@ -17,22 +30,22 @@ std::string stringLowLevelLib::lookUpVector(const int index){
     }
 }
 
-bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
+bool stringLowLevelLib::regexVector(const long long int index, const  char regex[]){
     try{
-        return std::regex_match (strVec.at(index), std::regex("(sub)(.*)") );
+        return std::regex_match (strVec.at(index), std::regex(regex) );
     }catch(...){
         return false;
     }
 }
 
-void stringLowLevelLib::removeVector(const int index){
-    strVec.erase(strVec.begin()+index);
+void stringLowLevelLib::removeVector(const long long int index){
+    strVec.erase(index);
 }
 
-std::string stringLowLevelLib::chunkData(const int index, int start, int end){    
+std::string stringLowLevelLib::chunkData(const long long int index, int start, int end){    
     try{ 
         std::string strToChunk = strVec.at(index).substr(start,end); 
-        return strVec.at(index);
+        return strToChunk;
     }catch(...){
         return "";
     }
@@ -41,6 +54,10 @@ std::string stringLowLevelLib::chunkData(const int index, int start, int end){
 int stringLowLevelLib::size(){
     return (int) strVec.size();
 } 
+
+void stringLowLevelLib::clear(){
+    strVec.clear();
+}
 
 stringLowLevelLib::stringLowLevelLib(){
 
