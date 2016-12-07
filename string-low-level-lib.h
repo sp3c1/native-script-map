@@ -4,21 +4,11 @@
 //#include <vector>
 #include <map>
 #include <regex>
-
+#include "sys/timeb.h"
 
 #ifdef TARGET_OS_MAC
-  // Mac Includes Here
-  #include "sys/timeb.h"
+    #include "sys/types.h" //for time
 #endif
-
-#ifdef __linux__
-  #include "sys/timeb.h"
-#endif
-
-#ifdef _WIN32 || _WIN64 
-  #include "sys/timeb.h"
-#endif
-
 
 class stringLowLevelLib{
 

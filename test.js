@@ -28,6 +28,11 @@ console.log('====================== clear');
 console.log(obj.clear());
 console.log(obj.get(index_b));
 console.log(obj.size());
-
-//console.log(obj.plusOne()); // 12
-//console.log(obj.plusOne()); // 13
+console.log('====================== exceptions');
+console.log(obj.remove(12345));
+console.log(obj.add());
+console.log(obj.append());
+console.log(obj.get());
+console.log(obj.remove());
+console.log(obj.chunk());
+console.log(obj.chunk(123123));

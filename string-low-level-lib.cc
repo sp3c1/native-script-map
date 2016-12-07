@@ -3,16 +3,15 @@
 long long int stringLowLevelLib::pushVector(const std::string text){
     long long int key = 0;
 
-    //#ifdef _WIN32 || _WIN64
-        timeb tb;
-        ftime(&tb);
-        int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+    timeb tb;
+    ftime(&tb);
+    int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
 
-        time_t seconds; 
-        time(&seconds);
+    time_t seconds; 
+    time(&seconds);
 
-        key = (long long int)(seconds * 1000 + nCount);
-     //#endif
+    key = (long long int)(seconds * 1000 + nCount);
+     
 
     strVec.insert(std::pair<long long int, std::string>(key, text));
     return key;
