@@ -5,15 +5,28 @@ long long int stringLowLevelLib::pushVector(const std::string text){
 
     timeb tb;
     ftime(&tb);
-    int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+    //int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+    //int nCount = (tb.time & 0xfffff) * 1000;
+    int nCount = tb.millitm ;
 
     time_t seconds; 
     time(&seconds);
 
-    key = (long long int)(seconds * 1000 + nCount);
-     
+    //key = (long long int)(seconds * 1000 + nCount);
+    //key= nCount;
+    
+    auto now = std::chrono::system_clock::now();
+    auto now_us = std::chrono::time_point_cast<std::chrono::microseconds>(now);
+    
+    auto epoch = now_us.time_since_epoch();
+    auto value = std::chrono::duration_cast<std::chrono::microseconds>(epoch);
+    
+    key = (long long int) value.count();
+    //std::cout << key << '\n';
+    
 
     strVec.insert(std::pair<long long int, std::string>(key, text));
+    
     return key;
 }
 
@@ -50,7 +63,6 @@ int stringLowLevelLib::removeVector(const long long int index){
 std::string stringLowLevelLib::chunkData(const long long int index, int start, int end){
    
     if(end<start){
-        std::cout<<"first find";
         throw false;
     }
   
@@ -59,7 +71,6 @@ std::string stringLowLevelLib::chunkData(const long long int index, int start, i
     try{ 
         return std::string(strVec.at(index).substr(start,end)); 
     }catch(...){
-        std::cout<<"fck";
         throw false;
     }
 }

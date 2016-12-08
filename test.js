@@ -4,13 +4,14 @@ console.log(addon);
 
 var obj = new addon.stringLowLevelLibWrapper();
 var index = obj.add("x");
+var index_b = obj.add("y");
 console.log(index);
 console.log(obj.append(index, "lol"));
 console.log(obj.get(index));
 console.log(obj);
 
 console.log('====================== add second');
-var index_b = obj.add("y");
+//var index_b = obj.add("y");
 console.log(obj.get(index));
 console.log(obj.get(index_b));
 console.log(index);

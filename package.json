@@ -22,5 +22,9 @@
     "bugs": {
         "url": "https://github.com/sp3c1/native-script-map/issues"
     },
-    "homepage": "https://github.com/sp3c1/native-script-map#readme"
+    "homepage": "https://github.com/sp3c1/native-script-map#readme",
+    "devDependencies": {
+        "expect": "1.20.2",
+        "mocha": "2.4.5"
+    }
 }

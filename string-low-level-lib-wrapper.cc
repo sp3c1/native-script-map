@@ -1,7 +1,6 @@
 #include <node.h>
 #include "string-low-level-lib-wrapper.h"
 
-
 using v8::Context;
 using v8::Function;
 using v8::FunctionCallbackInfo;
@@ -16,12 +15,9 @@ using v8::Value;
 using v8::Exception;
 using v8::Boolean;
 
-
-
 Persistent<Function> stringLowLevelLibWrapper::constructor;
 
 stringLowLevelLibWrapper::stringLowLevelLibWrapper() {
-    //value_ = new stringLowLevelLib(); 
 }
 
 stringLowLevelLibWrapper::~stringLowLevelLibWrapper() {
@@ -79,14 +75,18 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
   if (args.Length() != 1) {
      // Throw an Error that is passed back to JavaScript
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
-  long long int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
-  Local<Number> num = Number::New(isolate,index);
+  try{
+    long long int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
+    Local<Number> num = Number::New(isolate,index);
 
-  args.GetReturnValue().Set(num);
+    args.GetReturnValue().Set(num);
+  }catch(...){
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Could not add element")));
+  }
 }
 
 void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
@@ -95,14 +95,18 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
   if (args.Length() != 2) {
      // Throw an Error that is passed back to JavaScript
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
-  long long int index = (long long int) args[0]->IntegerValue();
-  obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
-
-  //args.GetReturnValue().Set(String::NewFromUtf(isolate, "xxxx"));
+  bool append=true;
+  try{
+    long long int index = (long long int) args[0]->IntegerValue();
+    obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
+  }catch(...){
+    append = false;
+  }
+  args.GetReturnValue().Set(Boolean::New(isolate, append));
 }
 
 void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
@@ -111,7 +115,7 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   if (args.Length() != 1) {
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
@@ -129,7 +133,7 @@ void stringLowLevelLibWrapper::regex(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   if (args.Length() != 2) {
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }  
 
@@ -151,7 +155,7 @@ void stringLowLevelLibWrapper::remove(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   if (args.Length() != 1) {
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
@@ -169,7 +173,7 @@ void stringLowLevelLibWrapper::chunk(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
 
   if (args.Length() != 3) {
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
@@ -195,7 +199,7 @@ void stringLowLevelLibWrapper::sizeAt(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
 
   if (args.Length() != 1) {
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
@@ -213,12 +217,11 @@ void stringLowLevelLibWrapper::hasIndex(const FunctionCallbackInfo<Value>& args)
   Isolate* isolate = args.GetIsolate();
 
   if (args.Length() != 1) {
-        isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Wrong number of arguments")));
     return;
   }
 
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
-
   
   args.GetReturnValue().Set(Boolean::New(isolate, obj->value_.hasAt((long long int) args[0]->IntegerValue())));
 }
