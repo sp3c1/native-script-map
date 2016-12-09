@@ -1,20 +1,22 @@
 #include "string-low-level-lib.h"
 
-int stringLowLevelLib::pushVector(const std::string text){
-    strVec.insert(std::pair<int, std::string>(key, text));
+int stringLowLevelLib::pushVector(const Local<String> text){
+    strVec.insert(std::pair<int, const Local<String>>(key, text));
     
     return key++;
 }
 
-void stringLowLevelLib::appendVector(const int index, const std::string text){
-    try{
-        strVec.at(index).append(text);
+
+void stringLowLevelLib::appendVector(const int index, const Local<String> text){    
+    try{       
+        strVec[index] = String::Concat(strVec[index],text);
     }catch(...){
         throw false;
     }
+    
 }
 
-std::string stringLowLevelLib::lookUpVector(const int index){
+Local<String> stringLowLevelLib::lookUpVector(const int index){
     try{ 
         return strVec.at(index);
     }catch(...){
@@ -23,12 +25,14 @@ std::string stringLowLevelLib::lookUpVector(const int index){
 }
 
 bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
-    
+    return true;
+    /*
     try{
         return std::regex_search (strVec.at(index), std::regex(regex) );
     }catch(...){
         throw false;
     }
+    */
 }
 
 int stringLowLevelLib::removeVector(const int index){
@@ -36,20 +40,18 @@ int stringLowLevelLib::removeVector(const int index){
     return strVec.erase(index);
 }
 
-std::string stringLowLevelLib::chunkData(const int index, int start, int end){
-   
+std::string  stringLowLevelLib::chunkData(const int index, int start, int end){
     if(end<start){
         throw false;
     }
-  
-        
 
-    try{ 
-        return std::string(strVec.at(index).substr(start,end)); 
+    try{
+        return std::string(*String::Utf8Value(strVec.at(index))).substr(start,end);
     }catch(...){
         throw false;
     }
 }
+
 
 int stringLowLevelLib::size(){
     try{
@@ -61,19 +63,21 @@ int stringLowLevelLib::size(){
 
 int stringLowLevelLib::sizeAt(const int index){
     try{
-        return (int) strVec.at(index).size();
+        return strVec.at(index)->Length();
     }catch(...){
         throw false;
     }
 }
 
 bool stringLowLevelLib::hasAt(const int index){
+    return true;
     try{
         strVec.at(index);
         return true; 
     }catch(...){
         return  false;
     }
+
 }
 
 void stringLowLevelLib::clear(){

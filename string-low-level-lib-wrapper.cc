@@ -85,9 +85,10 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
       throw false;
     }
 
-    int index = obj->value_.pushVector(std::string(*String::Utf8Value(args[0]->ToString())));
+    //int index = obj->value_.pushVector(std::string(*String::Utf8Value(args[0]->ToString())));
+    int index = obj->value_.pushVector(args[0]->ToString());
+    
     Local<Number> num = Number::New(isolate,index);
-
     args.GetReturnValue().Set(num);
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Could not add element")));
@@ -113,7 +114,7 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     }
 
     int index = (int) args[0]->IntegerValue();
-    //obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
+    obj->value_.appendVector(index, args[1]->ToString());
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));
     return;
@@ -135,8 +136,9 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
 
   int index = (int) args[0]->IntegerValue();
 
+  //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
   try{
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate,obj->value_.lookUpVector(index)));
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));
   }

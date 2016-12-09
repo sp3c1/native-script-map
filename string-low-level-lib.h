@@ -4,36 +4,38 @@
 //#include <vector>
 #include <map>
 #include <regex>
-#include "sys/timeb.h"
 #include <chrono>
+#include <node.h>
 
-#include <iostream>
-
-#ifdef TARGET_OS_MAC
-    #include "sys/types.h" //for time
-#endif
+using v8::Local;
+using v8::String;
+using v8::Value;
 
 class stringLowLevelLib{
 
     public:
         //std::vector<std::string> strVec;
-        std::map< int, std::string> strVec;
+        std::map< int, Local<String>> strVec;
         int key;
 
-        int pushVector(const std::string text);
-        void appendVector(const int index, const std::string text);
+        int pushVector(const Local<String> text);
+        
+        
+        void appendVector(const int index, const Local<String> text);
 
-        std::string lookUpVector(const int index);
+        Local<String> lookUpVector(const int index);
         bool regexVector(const int index, const  char regex[]);
 
         int removeVector(const int index);
         std::string chunkData(const int index, int start, int end);
+        
 
         int size();
         int sizeAt(const int index);
         bool hasAt(const int index);
 
         void clear();
+        
 
         stringLowLevelLib();
         ~stringLowLevelLib();
