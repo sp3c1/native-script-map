@@ -85,13 +85,14 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
       throw false;
     }
 
-    int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
+    int index = obj->value_.pushVector(std::string(*String::Utf8Value(args[0]->ToString())));
     Local<Number> num = Number::New(isolate,index);
 
     args.GetReturnValue().Set(num);
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Could not add element")));
   }
+  
 }
 
 void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
@@ -112,7 +113,7 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     }
 
     int index = (int) args[0]->IntegerValue();
-    obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
+    //obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));
     return;
