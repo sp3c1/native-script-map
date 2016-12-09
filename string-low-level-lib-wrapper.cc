@@ -80,7 +80,12 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
   }
 
   try{
-    long long int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
+    
+    if(!args[0]->IsString()){
+      throw false;
+    }
+
+    int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
     Local<Number> num = Number::New(isolate,index);
 
     args.GetReturnValue().Set(num);
@@ -99,14 +104,22 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     return;
   }
 
-  bool append=true;
+  
   try{
-    long long int index = (long long int) args[0]->IntegerValue();
+
+    if(!args[1]->IsString()){
+      throw false;
+    }
+
+    int index = (int) args[0]->IntegerValue();
     obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
   }catch(...){
-    append = false;
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));
+    return;
   }
-  args.GetReturnValue().Set(Boolean::New(isolate, append));
+
+  //no point to return true if we want to throw exception
+  //args.GetReturnValue().Set(Boolean::New(isolate, append));
 }
 
 void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
@@ -119,7 +132,7 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
     return;
   }
 
-  long long int index = (long long int) args[0]->IntegerValue();
+  int index = (int) args[0]->IntegerValue();
 
   try{
     args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
@@ -139,7 +152,7 @@ void stringLowLevelLibWrapper::regex(const FunctionCallbackInfo<Value>& args) {
 
   bool regex;
   try{
-    regex = obj->value_.regexVector((long long int) args[0]->IntegerValue(),*String::Utf8Value(args[1]->ToString()));
+    regex = obj->value_.regexVector((int) args[0]->IntegerValue(),*String::Utf8Value(args[1]->ToString()));
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Regex Exception")));
     return; 
@@ -161,7 +174,7 @@ void stringLowLevelLibWrapper::remove(const FunctionCallbackInfo<Value>& args) {
 
   int removed;
   
-  removed = obj->value_.removeVector((long long int) args[0]->IntegerValue());
+  removed = obj->value_.removeVector((int) args[0]->IntegerValue());
   
   if(removed==0){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Could not remove provided id")));
@@ -180,7 +193,7 @@ void stringLowLevelLibWrapper::chunk(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   try{
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((long long int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
   }catch(...){
      isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Chunking exception")));
   }
@@ -206,7 +219,7 @@ void stringLowLevelLibWrapper::sizeAt(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   try{
-    args.GetReturnValue().Set(Number::New(isolate, obj->value_.sizeAt((long long int) args[0]->IntegerValue())));
+    args.GetReturnValue().Set(Number::New(isolate, obj->value_.sizeAt((int) args[0]->IntegerValue())));
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Element does not exists"))); 
   }
@@ -223,7 +236,7 @@ void stringLowLevelLibWrapper::hasIndex(const FunctionCallbackInfo<Value>& args)
 
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
   
-  args.GetReturnValue().Set(Boolean::New(isolate, obj->value_.hasAt((long long int) args[0]->IntegerValue())));
+  args.GetReturnValue().Set(Boolean::New(isolate, obj->value_.hasAt((int) args[0]->IntegerValue())));
 }
 
 void stringLowLevelLibWrapper::clear(const FunctionCallbackInfo<Value>& args) {
