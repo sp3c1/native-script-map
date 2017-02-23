@@ -5,6 +5,8 @@
 #include <node_object_wrap.h>
 #include "string-low-level-lib.h"
 
+#include <iostream>
+
 class stringLowLevelLibWrapper : public node::ObjectWrap {
   public:
     static void Init(v8::Local<v8::Object> exports);

@@ -6,6 +6,7 @@
 
 using v8::Local;
 using v8::Object;
+using v8::Persistent;
 
 void InitAll(Local<Object> exports) {
   stringLowLevelLibWrapper::Init(exports);

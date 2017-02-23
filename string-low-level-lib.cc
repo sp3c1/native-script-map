@@ -1,7 +1,10 @@
 #include "string-low-level-lib.h"
 
 int stringLowLevelLib::pushVector(const Local<String> text){
-    strVec.insert(std::pair<int, const Local<String>>(key, text));
+
+    
+
+    strVec.insert(std::pair<int, Local<String>>(key, text));
     
     return key++;
 }
@@ -37,6 +40,7 @@ bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
 
 int stringLowLevelLib::removeVector(const int index){
     //exception handled by wrapper
+    //todo clear persistent
     return strVec.erase(index);
 }
 
@@ -81,6 +85,7 @@ bool stringLowLevelLib::hasAt(const int index){
 }
 
 void stringLowLevelLib::clear(){
+    //todo clear persistent
     strVec.clear();
 }
 
@@ -89,5 +94,6 @@ stringLowLevelLib::stringLowLevelLib(){
 }
 
 stringLowLevelLib::~stringLowLevelLib(){
+    //todo clear persistent
     strVec.clear();
 }

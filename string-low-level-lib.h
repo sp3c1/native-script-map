@@ -10,6 +10,7 @@
 using v8::Local;
 using v8::String;
 using v8::Value;
+//using v8::PersistentBase;
 
 class stringLowLevelLib{
 
