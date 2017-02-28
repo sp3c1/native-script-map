@@ -10,21 +10,24 @@
 using v8::Local;
 using v8::String;
 using v8::Value;
-//using v8::PersistentBase;
+using v8::Persistent;
+
+typedef std::map<int, Persistent<String>*> PersistentMap;
+typedef std::pair<int, Persistent<String>*> PersistentPair;
 
 class stringLowLevelLib{
 
     public:
-        //std::vector<std::string> strVec;
-        std::map< int, Local<String>> strVec;
+        PersistentMap strVec;
         int key;
 
-        int pushVector(const Local<String> text);
+        int pushVector(Persistent<String>* textPtr);
+        int pushVector();
         
         
         void appendVector(const int index, const Local<String> text);
 
-        Local<String> lookUpVector(const int index);
+        Persistent<String>* lookUpVector(const int index);
         bool regexVector(const int index, const  char regex[]);
 
         int removeVector(const int index);

@@ -1,10 +1,9 @@
 #include "string-low-level-lib.h"
 
-int stringLowLevelLib::pushVector(const Local<String> text){
-
+int stringLowLevelLib::pushVector(Persistent<String>* textPtr){
     
-
-    strVec.insert(std::pair<int, Local<String>>(key, text));
+    //strVec.insert(std::pair<int, Local<String>>(key, text));
+    strVec.insert(PersistentPair(this->key, textPtr));
     
     return key++;
 }
@@ -12,18 +11,21 @@ int stringLowLevelLib::pushVector(const Local<String> text){
 
 void stringLowLevelLib::appendVector(const int index, const Local<String> text){    
     try{       
-        strVec[index] = String::Concat(strVec[index],text);
+        //strVec[index] = String::Concat(strVec[index],text);
     }catch(...){
         throw false;
     }
     
 }
 
-Local<String> stringLowLevelLib::lookUpVector(const int index){
+Persistent<String>* stringLowLevelLib::lookUpVector(const int index){
+//void stringLowLevelLib::lookUpVector(const int index){
+  
     try{ 
         return strVec.at(index);
     }catch(...){
-        throw false;
+        //throw false;
+        return nullptr;
     }
 }
 
@@ -50,7 +52,8 @@ std::string  stringLowLevelLib::chunkData(const int index, int start, int end){
     }
 
     try{
-        return std::string(*String::Utf8Value(strVec.at(index))).substr(start,end);
+        //return std::string(*String::Utf8Value(strVec.at(index))).substr(start,end);
+        return std::string("oi");
     }catch(...){
         throw false;
     }
@@ -67,7 +70,8 @@ int stringLowLevelLib::size(){
 
 int stringLowLevelLib::sizeAt(const int index){
     try{
-        return strVec.at(index)->Length();
+        //return strVec.at(index)->Length();
+        return 0;
     }catch(...){
         throw false;
     }

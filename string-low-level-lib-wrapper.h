@@ -2,6 +2,7 @@
 #define STRINGLOWLEVELLIBWRAPPER_H
 
 #include <node.h>
+#include <nan.h>
 #include <node_object_wrap.h>
 #include "string-low-level-lib.h"
 
@@ -18,6 +19,7 @@ class stringLowLevelLibWrapper : public node::ObjectWrap {
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);    
     static v8::Persistent<v8::Function> constructor;
     stringLowLevelLib  value_;
+    //v8::Persistent<v8::String> persist;
 
     static void add(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void append(const v8::FunctionCallbackInfo<v8::Value>& args);

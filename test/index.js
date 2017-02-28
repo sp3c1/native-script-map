@@ -15,12 +15,19 @@ describe('Native String Lookup Map', function() {
     });
 
     it('add element', function() {
+        console.log('wtf================');
         index = obj.add('xxx');
+        console.log('1================');
         expect(obj.size()).toBe(1);
+        console.log('2================');
         expect(index).toBe(0);
+        console.log('3================');
         expect(obj.hasIndex(index)).toBe(true);
+        console.log('4================');
         expect(obj.get(index)).toBe('xxx');
+        console.log('5================');
         expect(obj.sizeAt(index)).toBe(3);
+        console.log('6================');
     });
     /*
         it('append element', function() {
