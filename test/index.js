@@ -6,8 +6,8 @@ const addon = require('../build/Release/addon');
 
 var obj = new addon.stringLowLevelLibWrapper();
 
-let index = 0;
-let indexSecondary = 0;
+let index = -1;
+let indexSecondary = -1;
 
 describe('Native String Lookup Map', function() {
     it('should be empty map', function() {
@@ -17,15 +17,14 @@ describe('Native String Lookup Map', function() {
     it('add element', function() {
         index = obj.add('xxx');
         expect(obj.size()).toBe(1);
-        expect(index).toNotBe(0);
+        expect(index).toBe(0);
         expect(obj.hasIndex(index)).toBe(true);
         expect(obj.get(index)).toBe('xxx');
         expect(obj.sizeAt(index)).toBe(3);
     });
 
     it('append element', function() {
-        let indexCheck = obj.append(index, "x");
-        expect(indexCheck).toBe(true);
+        obj.append(index, "x");
         expect(obj.get(index)).toBe('xxxx');
         expect(obj.sizeAt(index)).toBe(4);
     });
@@ -38,11 +37,12 @@ describe('Native String Lookup Map', function() {
         expect(obj.regex(index, "([ax])")).toBe(true);
         expect(obj.regex(index, "xxxx")).toBe(true);
     });
-
+    /*
     it('handle chunking and get on right index', function() {
         expect(obj.chunk(index, 0, 4)).toBe(obj.get(index));
         expect(obj.chunk(index, 0, 2)).toBe("xx");
     });
+
 
     it('handle wrong chunking and get on right index', function() {
 
@@ -61,9 +61,11 @@ describe('Native String Lookup Map', function() {
         expect(chunkMissingArgument).toThrow("Wrong number of arguments");
 
     });
+    */
 
     it('remove element', function() {
         obj.remove(index);
+
         expect(obj.size()).toBe(0);
         expect(obj.hasIndex(index)).toBe(false);
 
@@ -72,12 +74,14 @@ describe('Native String Lookup Map', function() {
         };
         expect(get).toThrow("Can not retrive element");
 
+        /*
         let chunk = () => {
             return obj.chunk(index, 1, 2);
         };
         expect(chunk).toThrow("Chunking exception");
+        */
 
-        expect(obj.append(index, "ow No")).toBe(false);
+        expect(() => { obj.append(index, "ow No") }).toThrow();
 
         let sizeAt = () => {
             return obj.sizeAt(index);
@@ -86,22 +90,21 @@ describe('Native String Lookup Map', function() {
         expect(sizeAt).toThrow("Element does not exists");
     });
 
-    it('handle chunking and get on wrong index', function() {
-        let method = () => {
-            obj.chunk(index, 0, 0);
-        }
+    /*
+        it('handle chunking and get on wrong index', function() {
+            let method = () => {
+                obj.chunk(index, 0, 0);
+            }
 
-        expect(method).toThrow("Chunking exception");
-    });
+            expect(method).toThrow("Chunking exception");
+        });
+        */
 
     it('adding 2 elemnts', function() {
         index = obj.add('abc');
         indexSecondary = obj.add('zyxw');
-        console.log(index, indexSecondary);
-        //expect(obj.size()).toBe(2);
-        expect(index).toNotBe(0);
-        expect(indexSecondary).toNotBe(0);
-        expect(indexSecondary).toNotBe(index);
+        expect(index).toBe(1);
+        expect(indexSecondary).toBe(2);
         expect(obj.hasIndex(index)).toBe(true);
         expect(obj.hasIndex(indexSecondary)).toBe(true);
         expect(obj.get(index)).toBe('abc');
@@ -110,25 +113,48 @@ describe('Native String Lookup Map', function() {
         expect(obj.sizeAt(indexSecondary)).toBe(4);
     });
 
-    it('', function() {});
+    it('more regex checks', function() {
+        expect(obj.regex(index, "a")).toBe(true);
+        expect(obj.regex(index, "b")).toBe(true);
+        expect(obj.regex(index, "c")).toBe(true);
+        expect(obj.regex(index, "([cba])")).toBe(true);
+    });
 
-    it('', function() {});
+    it('other exceptions', function() {
+        expect(() => { obj.get() }).toThrow();
+        expect(() => { obj.append() }).toThrow();
+        expect(() => { obj.add() }).toThrow();
+        expect(() => { obj.remove(12345) }).toThrow();
+        expect(() => { obj.remove() }).toThrow();
+    });
 
-    it('', function() {});
+    it('clear', function() {
+        obj.clear();
+        expect(obj.size()).toBe(0);
+    });
 
-    it('', function() {});
+    it('add append funky types', function() {
 
-    it('', function() {});
+        expect(() => { obj.add(null) }).toThrow();
+        expect(() => { obj.add(undefined) }).toThrow();
+        expect(() => { obj.add(false) }).toThrow();
+        expect(() => { obj.add(123) }).toThrow();
 
-    it('', function() {});
+        index = obj.add("");
+        expect(index).toBe(3);
+        expect(obj.size()).toBe(1);
 
-    it('', function() {});
+        let sizeAt = obj.sizeAt(index);
+        expect(obj.sizeAt(index)).toBe(0);
 
-    it('', function() {});
+        expect(() => { obj.append(index, null) }).toThrow();
+        expect(() => { obj.append(index, undefined) }).toThrow();
+        expect(() => { obj.append(index, false) }).toThrow();
+        expect(() => { obj.append(index, 123) }).toThrow();
 
-    it('', function() {});
+        sizeAt = obj.sizeAt(index);
+        expect(obj.sizeAt(index)).toBe(0);
 
-    it('', function() {});
+    });
 
-    it('', function() {});
 });
