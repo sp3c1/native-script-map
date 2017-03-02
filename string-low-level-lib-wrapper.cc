@@ -84,27 +84,8 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
     if(!args[0]->IsString()){
       throw false;
     }
-
-    //might need to mvoe it back into the lib and keep the vec of persistent strings instead of vector of pointers
-    //int index = obj->value_.pushVector(std::string(*String::Utf8Value(args[0]->ToString())));
-    v8::Persistent<v8::String> persist;
-    
-    v8::Persistent<v8::String>* persistHandle;
-    persistHandle = &obj->persist;
   
-
-    obj->persist.Reset(isolate, args[0]->ToString());
-    //Local<String> str = String::NewFromUtf8(isolate, String::Utf8Value(args[0]->ToString()));
-    //persist.Reset(isolate,str);
-    
-
-    //Local<String> testStr = v8::Local<v8::String>::New(isolate,*persistHandle);
-
-    std::cout << "\n========= VALUE : \n";
-    std::cout << *String::Utf8Value( args[0]);
-    std::cout << "\n========= non Value \n";
-    int index = obj->value_.pushVector(&obj->persist);
-    
+    int index = obj->value_.pushVector(args[0]->ToString());
 
     Local<Number> num = Number::New(isolate,index);
     args.GetReturnValue().Set(num);
@@ -124,7 +105,6 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     return;
   }
 
-
   try{
 
     if(!args[1]->IsString()){
@@ -134,11 +114,6 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     int index = (int) args[0]->IntegerValue();
     obj->value_.appendVector(index, args[1]->ToString());
 
-    std::cout << "\n========= VALUE : \n";
-    std::cout << *String::Utf8Value( args[1]);
-    std::cout << "\n========= VALUE \n";
-
-    //obj->value_.appendVector(index, args[1]);
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));
     return;
@@ -161,36 +136,14 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
 
   int index = (int) args[0]->IntegerValue();
 
-  
-
-  //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
   try{
+    /** would need to overload the * operator if i want to return only ptr**/
+    /*wrapper* objHandle = obj->value_.lookUpVector(index);
+    Local<String> testStr = *objHandle->strObj;*/
     
-
-    //std::cout << typeid (obj->value_.lookUpVector(index)).name();
-    //std::cout << typeid (obj->value_.lookUpVector(index));
-    //std::cout << typeid (*(obj->value_.lookUpVector(index)));
-    
-    //v8::Persistent<v8::String>* persistHandle = obj->value_.lookUpVector(index);
-     v8::Persistent<v8::String>* persistHandle = &obj->persist;
-
-    Local<String> testStr = v8::Local<v8::String>::New(isolate,*persistHandle);
-
-    //its not persisted string
-    //std::cout << *String::Utf8Value(obj->value_.lookUpVector(index));
-    std::cout << "\n========= VALUE : \n";
-    std::cout << *String::Utf8Value(testStr);
-    std::cout << "\n========= PTR \n";
-    std::cout << persistHandle;
-    std::cout << "\n========= PTR \n";
-
-
-
-    //args.GetReturnValue().Set(obj->value_.lookUpVector(index)->ToString());
-    //args.GetReturnValue().Set(obj->value_.lookUpVector(index));
-    args.GetReturnValue().Set(v8::Local<v8::String>::New(isolate,*persistHandle));
+    Local<String> testStr = Nan::New(obj->value_.lookUpVector(index).strObj);
+    args.GetReturnValue().Set(testStr);
   }catch(...){
-    std::cout << "\n========= Exception : \n";
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));
   }
 }

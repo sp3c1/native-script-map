@@ -6,14 +6,32 @@
 #include <regex>
 #include <chrono>
 #include <node.h>
+#include <nan.h>
+
+#include <iostream>
 
 using v8::Local;
 using v8::String;
 using v8::Value;
 using v8::Persistent;
+using v8::Isolate;
 
-typedef std::map<int, Persistent<String>*> PersistentMap;
-typedef std::pair<int, Persistent<String>*> PersistentPair;
+class wrapper{
+    public:
+        Nan::Persistent<v8::String> strObj;
+    
+        wrapper& operator=(wrapper obj);
+        wrapper& operator=(wrapper* obj);
+
+        wrapper( wrapper& other );
+
+        wrapper();
+};
+
+typedef std::map<int, wrapper> PersistentMap;
+typedef std::pair<int, wrapper> PersistentPair;
+typedef Nan::Persistent<String> PersistentString;
+
 
 class stringLowLevelLib{
 
@@ -21,13 +39,16 @@ class stringLowLevelLib{
         PersistentMap strVec;
         int key;
 
-        int pushVector(Persistent<String>* textPtr);
-        int pushVector();
+        //int pushVector(Persistent<String>* textPtr);
+        //int pushVector(Isolate* isolate, Local<String> arg); /** +++ **/
+        int pushVector(Local<String> arg); /** +++ **/
         
         
         void appendVector(const int index, const Local<String> text);
+        //void appendVector(const int index, const Local<String> text);
 
-        Persistent<String>* lookUpVector(const int index);
+        //Persistent<String>* lookUpVector(const int index);
+        wrapper lookUpVector(const int index);
         bool regexVector(const int index, const  char regex[]);
 
         int removeVector(const int index);

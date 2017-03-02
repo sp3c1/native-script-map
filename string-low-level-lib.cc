@@ -1,48 +1,65 @@
 #include "string-low-level-lib.h"
 
-int stringLowLevelLib::pushVector(Persistent<String>* textPtr){
+// view  https://github.com/nodejs/nan/blob/137bd5ae2d47064d44791a094582d97ca0e1b8bb/test/cpp/persistent.cpp
+// https://nodeaddons.com/c-processing-from-node-js/
+// 
+
+wrapper::wrapper(){ //constructor
+    this->strObj.Reset();
+}
+
+wrapper& wrapper::operator=(wrapper obj){ // assign operator
+  this->strObj.Reset(obj.strObj);
+  return *this;
+}
+
+wrapper::wrapper( wrapper& other ){ // copying object over
     
-    //strVec.insert(std::pair<int, Local<String>>(key, text));
-    strVec.insert(PersistentPair(this->key, textPtr));
+    this->strObj.Reset(other.strObj);
+}
+
+int stringLowLevelLib::pushVector(Local<String> arg){
+    wrapper persistentWrapper;
+    persistentWrapper.strObj.Reset(arg);
+    strVec.insert(PersistentPair(key, persistentWrapper));
     
     return key++;
 }
 
 
 void stringLowLevelLib::appendVector(const int index, const Local<String> text){    
-    try{       
-        //strVec[index] = String::Concat(strVec[index],text);
+    try{
+        Local<String> tmp = Nan::New(strVec.at(index).strObj);
+        tmp = String::Concat(tmp,text);
+        strVec.at(index).strObj.Reset(tmp);
     }catch(...){
         throw false;
     }
     
 }
 
-Persistent<String>* stringLowLevelLib::lookUpVector(const int index){
-//void stringLowLevelLib::lookUpVector(const int index){
-  
+wrapper stringLowLevelLib::lookUpVector(const int index){
     try{ 
         return strVec.at(index);
     }catch(...){
-        //throw false;
-        return nullptr;
+        throw false;
     }
 }
 
 bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
-    return true;
-    /*
+
     try{
-        return std::regex_search (strVec.at(index), std::regex(regex) );
+        //would rather use node native regex
+        return std::regex_search (*String::Utf8Value(Nan::New(strVec.at(index).strObj)), std::regex(regex) );
     }catch(...){
         throw false;
     }
-    */
+    
 }
 
 int stringLowLevelLib::removeVector(const int index){
     //exception handled by wrapper
-    //todo clear persistent
+    strVec.at(index).strObj.Reset();
     return strVec.erase(index);
 }
 
@@ -52,8 +69,9 @@ std::string  stringLowLevelLib::chunkData(const int index, int start, int end){
     }
 
     try{
-        //return std::string(*String::Utf8Value(strVec.at(index))).substr(start,end);
-        return std::string("oi");
+        //return String::Utf8Value(Nan::New(strVec.at(index)).strObj)
+        //return std::string(*String::Utf8Value(strVec.at(index).strObj)).substr(start,end);
+        return std::string("");
     }catch(...){
         throw false;
     }
@@ -70,15 +88,15 @@ int stringLowLevelLib::size(){
 
 int stringLowLevelLib::sizeAt(const int index){
     try{
-        //return strVec.at(index)->Length();
-        return 0;
+        //dont want to copy this really unless its not a copy
+        Local<String> tmp = Nan::New(strVec.at(index).strObj);
+        return (int) tmp->Utf8Length();
     }catch(...){
         throw false;
     }
 }
 
 bool stringLowLevelLib::hasAt(const int index){
-    return true;
     try{
         strVec.at(index);
         return true; 
