@@ -14,7 +14,6 @@ wrapper& wrapper::operator=(wrapper obj){ // assign operator
 }
 
 wrapper::wrapper( wrapper& other ){ // copying object over
-    
     this->strObj.Reset(other.strObj);
 }
 
@@ -107,7 +106,10 @@ bool stringLowLevelLib::hasAt(const int index){
 }
 
 void stringLowLevelLib::clear(){
-    //todo clear persistent
+    for(auto &ent1 : strVec) { //const?
+        ent1.second.strObj.Reset();
+    }
+
     strVec.clear();
 }
 
@@ -116,6 +118,9 @@ stringLowLevelLib::stringLowLevelLib(){
 }
 
 stringLowLevelLib::~stringLowLevelLib(){
-    //todo clear persistent
+    for(auto &ent1 : strVec) { //const?
+        ent1.second.strObj.Reset();
+    }
+
     strVec.clear();
 }
