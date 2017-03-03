@@ -1,6 +1,6 @@
 'use strict';
 
-var testString = {};
+var testString = [];
 var start = process.memoryUsage();
 var timeStart = Date.now();
 
