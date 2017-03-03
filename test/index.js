@@ -69,10 +69,7 @@ describe('Native String Lookup Map', function() {
         expect(obj.size()).toBe(0);
         expect(obj.hasIndex(index)).toBe(false);
 
-        let get = () => {
-            return obj.get(index)
-        };
-        expect(get).toThrow("Can not retrive element");
+        expect(() => { obj.get(index); }).toThrow("Can not retrive element");
 
         /*
         let chunk = () => {
@@ -83,11 +80,7 @@ describe('Native String Lookup Map', function() {
 
         expect(() => { obj.append(index, "ow No") }).toThrow();
 
-        let sizeAt = () => {
-            return obj.sizeAt(index);
-        };
-
-        expect(sizeAt).toThrow("Element does not exists");
+        expect(() => { obj.sizeAt(index) }).toThrow("Element does not exists");
     });
 
     /*
@@ -134,7 +127,6 @@ describe('Native String Lookup Map', function() {
     });
 
     it('add append funky types', function() {
-
         expect(() => { obj.add(null) }).toThrow();
         expect(() => { obj.add(undefined) }).toThrow();
         expect(() => { obj.add(false) }).toThrow();

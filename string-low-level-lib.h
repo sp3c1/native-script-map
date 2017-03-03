@@ -17,20 +17,21 @@ class stringLowLevelLib{
 
     public:
         //std::vector<std::string> strVec;
-        std::map< long long int, std::string> strVec;
+        std::map<  int, std::string> strVec;
+        int key = 0;
 
-        long long int pushVector(const std::string text);
-        void appendVector(const long long int index, const std::string text);
+         int pushVector(const std::string text);
+        void appendVector(const  int index, const std::string text);
 
-        std::string lookUpVector(const long long int index);
-        bool regexVector(const long long int index, const  char regex[]);
+        std::string lookUpVector(const  int index);
+        bool regexVector(const  int index, const  char regex[]);
 
-        int removeVector(const long long int index);
-        std::string chunkData(const long long int index, int start, int end);
+        int removeVector(const  int index);
+        std::string chunkData(const  int index, int start, int end);
 
         int size();
-        int sizeAt(const long long int index);
-        bool hasAt(const long long int index);
+        int sizeAt(const  int index);
+        bool hasAt(const  int index);
 
         void clear();
 

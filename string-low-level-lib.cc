@@ -1,36 +1,12 @@
 #include "string-low-level-lib.h"
 
-long long int stringLowLevelLib::pushVector(const std::string text){
-    long long int key = 0;
-
-    timeb tb;
-    ftime(&tb);
-    //int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
-    //int nCount = (tb.time & 0xfffff) * 1000;
-    int nCount = tb.millitm ;
-
-    time_t seconds; 
-    time(&seconds);
-
-    //key = (long long int)(seconds * 1000 + nCount);
-    //key= nCount;
+int stringLowLevelLib::pushVector(const std::string text){
+    strVec.insert(std::pair<int, std::string>(key, text));
     
-    auto now = std::chrono::system_clock::now();
-    auto now_us = std::chrono::time_point_cast<std::chrono::microseconds>(now);
-    
-    auto epoch = now_us.time_since_epoch();
-    auto value = std::chrono::duration_cast<std::chrono::microseconds>(epoch);
-    
-    key = (long long int) value.count();
-    //std::cout << key << '\n';
-    
-
-    strVec.insert(std::pair<long long int, std::string>(key, text));
-    
-    return key;
+    return key++;
 }
 
-void stringLowLevelLib::appendVector(const long long int index, const std::string text){
+void stringLowLevelLib::appendVector(const int index, const std::string text){
     try{
         strVec.at(index).append(text);
     }catch(...){
@@ -38,7 +14,7 @@ void stringLowLevelLib::appendVector(const long long int index, const std::strin
     }
 }
 
-std::string stringLowLevelLib::lookUpVector(const long long int index){
+std::string stringLowLevelLib::lookUpVector(const int index){
     try{ 
         return strVec.at(index);
     }catch(...){
@@ -46,7 +22,7 @@ std::string stringLowLevelLib::lookUpVector(const long long int index){
     }
 }
 
-bool stringLowLevelLib::regexVector(const long long int index, const  char regex[]){
+bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
     
     try{
         return std::regex_search (strVec.at(index), std::regex(regex) );
@@ -55,12 +31,12 @@ bool stringLowLevelLib::regexVector(const long long int index, const  char regex
     }
 }
 
-int stringLowLevelLib::removeVector(const long long int index){
+int stringLowLevelLib::removeVector(const int index){
     //exception handled by wrapper
     return strVec.erase(index);
 }
 
-std::string stringLowLevelLib::chunkData(const long long int index, int start, int end){
+std::string stringLowLevelLib::chunkData(const int index, int start, int end){
    
     if(end<start){
         throw false;
@@ -83,7 +59,7 @@ int stringLowLevelLib::size(){
     }
 } 
 
-int stringLowLevelLib::sizeAt(const long long int index){
+int stringLowLevelLib::sizeAt(const int index){
     try{
         return (int) strVec.at(index).size();
     }catch(...){
@@ -91,7 +67,7 @@ int stringLowLevelLib::sizeAt(const long long int index){
     }
 }
 
-bool stringLowLevelLib::hasAt(const long long int index){
+bool stringLowLevelLib::hasAt(const int index){
     try{
         strVec.at(index);
         return true; 
