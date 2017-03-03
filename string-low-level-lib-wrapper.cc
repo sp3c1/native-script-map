@@ -69,10 +69,6 @@ void stringLowLevelLibWrapper::New(const FunctionCallbackInfo<Value>& args) {
   }
 }
 
-const char* ToCString(const String::Utf8Value& value) {
-  return *value ? *value : "<string conversion failed>";
-}
-
 void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
 
@@ -89,10 +85,13 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
       throw false;
     }
 
-    static String::Utf8Value str(args[0]);
-    const char* bar = ToCString(str);
+    
+    static std::string str = *String::Utf8Value(args[0]->ToString());
+    //std::cout<< "\ntest\n";
+    //std::cout<< str;
+    //std::cout<< "\ntest\n";
 
-    int index = obj->value_.pushVector(bar);
+    int index = obj->value_.pushVector(&str);
     
     Local<Number> num = Number::New(isolate,index);
 
@@ -119,7 +118,7 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     }
 
     int index = (int)args[0]->IntegerValue();
-    obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
+    //obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
   }catch (...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));
     return;
@@ -140,11 +139,11 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
  int index = (int) args[0]->IntegerValue();
 
   try{
-    //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)));    
-    std::cout <<"\ncout\n";
-    std::cout << obj->value_.lookUpVector(index);
-    std::cout <<"\ncout\n";
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)->c_str()));
+    //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)));    
+    //std::cout <<"\ncout\n";
+    //std::cout << *obj->value_.lookUpVector(index);
+    //std::cout <<"\ncout\n";
 
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));

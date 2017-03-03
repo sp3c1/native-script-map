@@ -3,6 +3,8 @@
     "files.associations": {
         "tuple": "cpp",
         "xutility": "cpp",
-        "exception": "cpp"
+        "exception": "cpp",
+        "regex": "cpp",
+        "xlocale": "cpp"
     }
 }
