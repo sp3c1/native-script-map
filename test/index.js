@@ -16,10 +16,10 @@ describe('Native String Lookup Map', function() {
 
     it('add element', function() {
         index = obj.add('xxx');
-        expect(obj.size()).toBe(1);
         expect(index).toBe(0);
         expect(obj.hasIndex(index)).toBe(true);
         expect(obj.get(index)).toBe('xxx');
+        expect(obj.size()).toBe(1);
         expect(obj.sizeAt(index)).toBe(3);
     });
 
