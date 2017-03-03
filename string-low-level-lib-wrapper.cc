@@ -69,6 +69,10 @@ void stringLowLevelLibWrapper::New(const FunctionCallbackInfo<Value>& args) {
   }
 }
 
+const char* ToCString(const String::Utf8Value& value) {
+  return *value ? *value : "<string conversion failed>";
+}
+
 void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
 
@@ -85,9 +89,11 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
       throw false;
     }
 
-    //int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
-    //int index = obj->value_.pushVector(args[0]->ToString());
-    int index = obj->value_.pushVector(std::string("lol"));
+    static String::Utf8Value str(args[0]);
+    const char* bar = ToCString(str);
+
+    int index = obj->value_.pushVector(bar);
+    
     Local<Number> num = Number::New(isolate,index);
 
     args.GetReturnValue().Set(num);
@@ -134,7 +140,12 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
  int index = (int) args[0]->IntegerValue();
 
   try{
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
+    //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index).c_str()));
+    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)));    
+    std::cout <<"\ncout\n";
+    std::cout << obj->value_.lookUpVector(index);
+    std::cout <<"\ncout\n";
+
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));
   }
@@ -190,7 +201,7 @@ void stringLowLevelLibWrapper::chunk(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   try{
-    args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
+    //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
   }catch(...){
      isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Chunking exception")));
   }
