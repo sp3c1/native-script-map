@@ -84,12 +84,8 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
     if(!args[0]->IsString()){
       throw false;
     }
-
     
     static std::string str = *String::Utf8Value(args[0]->ToString());
-    //std::cout<< "\ntest\n";
-    //std::cout<< str;
-    //std::cout<< "\ntest\n";
 
     int index = obj->value_.pushVector(&str);
     
@@ -140,10 +136,6 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
 
   try{
     args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)->c_str()));
-    //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)));    
-    //std::cout <<"\ncout\n";
-    //std::cout << *obj->value_.lookUpVector(index);
-    //std::cout <<"\ncout\n";
 
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));
