@@ -8,7 +8,7 @@ int stringLowLevelLib::pushVector(const std::string text){
 
 void stringLowLevelLib::appendVector(const int index, const std::string text){
     try{
-        strVec.at(index).append(text);
+        //strVec.at(index).append(text);
     }catch(...){
         throw false;
     }

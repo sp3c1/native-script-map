@@ -20,7 +20,7 @@ class stringLowLevelLib{
         std::map<  int, std::string> strVec;
         int key = 0;
 
-         int pushVector(const std::string text);
+        int pushVector(const std::string text);
         void appendVector(const  int index, const std::string text);
 
         std::string lookUpVector(const  int index);

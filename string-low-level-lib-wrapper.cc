@@ -85,7 +85,9 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
       throw false;
     }
 
-    int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
+    //int index = obj->value_.pushVector(*String::Utf8Value(args[0]->ToString()));
+    //int index = obj->value_.pushVector(args[0]->ToString());
+    int index = obj->value_.pushVector(std::string("lol"));
     Local<Number> num = Number::New(isolate,index);
 
     args.GetReturnValue().Set(num);
