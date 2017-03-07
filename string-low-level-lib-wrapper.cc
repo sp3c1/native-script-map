@@ -112,7 +112,7 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     }
 
     int index = (int) args[0]->IntegerValue();
-    obj->value_.appendVector(index, args[1]->ToString());
+    obj->value_.appendVector(index, &(args[1]->ToString()));
 
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));

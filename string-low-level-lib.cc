@@ -5,7 +5,7 @@
 // 
 
 wrapper::wrapper(){ //constructor
-    this->strObj.Reset();
+    //this->strObj.Reset();
 }
 
 wrapper& wrapper::operator=(wrapper obj){ // assign operator
@@ -26,11 +26,11 @@ int stringLowLevelLib::pushVector(Local<String> arg){
 }
 
 
-void stringLowLevelLib::appendVector(const int index, const Local<String> text){    
+void stringLowLevelLib::appendVector(const int index, const Local<String>* text){    
     try{
-        Local<String> tmp = Nan::New(strVec.at(index).strObj);
-        tmp = String::Concat(tmp,text);
-        strVec.at(index).strObj.Reset(tmp);
+        //Local<String> tmp = Nan::New(strVec.at(index).strObj);
+        //tmp = ;
+        strVec.at(index).strObj.Reset( String::Concat(Nan::New(strVec.at(index).strObj),*text));
     }catch(...){
         throw false;
     }
@@ -58,7 +58,9 @@ bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
 
 int stringLowLevelLib::removeVector(const int index){
     //exception handled by wrapper
+    //strVec.at(index).strObj.Reset();
     strVec.at(index).strObj.Reset();
+    strVec.at(index).strObj.~Persistent();
     return strVec.erase(index);
 }
 
@@ -108,6 +110,8 @@ bool stringLowLevelLib::hasAt(const int index){
 void stringLowLevelLib::clear(){
     for(auto &ent1 : strVec) { //const?
         ent1.second.strObj.Reset();
+        ent1.second.strObj.~Persistent();
+        
     }
 
     strVec.clear();
@@ -120,6 +124,8 @@ stringLowLevelLib::stringLowLevelLib(){
 stringLowLevelLib::~stringLowLevelLib(){
     for(auto &ent1 : strVec) { //const?
         ent1.second.strObj.Reset();
+        ent1.second.strObj.~Persistent();
+        
     }
 
     strVec.clear();

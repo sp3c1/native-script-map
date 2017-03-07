@@ -44,7 +44,7 @@ class stringLowLevelLib{
         int pushVector(Local<String> arg); /** +++ **/
         
         
-        void appendVector(const int index, const Local<String> text);
+        void appendVector(const int index, const Local<String>* text);
         //void appendVector(const int index, const Local<String> text);
 
         //Persistent<String>* lookUpVector(const int index);
