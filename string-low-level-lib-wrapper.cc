@@ -85,9 +85,13 @@ void stringLowLevelLibWrapper::add(const FunctionCallbackInfo<Value>& args) {
       throw false;
     }
     
-    static std::string str = *String::Utf8Value(args[0]->ToString());
+    /* too much copying
+    std::string str = *String::Utf8Value(args[0]->ToString());
+    int index = obj->value_.pushVector(str);
+    str.~string();
+    */
 
-    int index = obj->value_.pushVector(&str);
+    int index = obj->value_.pushVector(args[0]->ToString());
     
     Local<Number> num = Number::New(isolate,index);
 
@@ -114,7 +118,14 @@ void stringLowLevelLibWrapper::append(const FunctionCallbackInfo<Value>& args) {
     }
 
     int index = (int)args[0]->IntegerValue();
-    //obj->value_.appendVector(index, *String::Utf8Value(args[1]->ToString()));
+    
+    //this is temp variable only, its alright its reused by many calls, we save
+    //static std::string strAppend = *String::Utf8Value(args[1]->ToString()); 
+    // obj->value_.appendVector(index,&strAppend);
+    // strAppend.clear();
+
+    obj->value_.appendVector(index,args[1]->ToString());
+
   }catch (...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not append")));
     return;
@@ -136,7 +147,6 @@ void stringLowLevelLibWrapper::get(const FunctionCallbackInfo<Value>& args) {
 
   try{
     args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.lookUpVector(index)->c_str()));
-
   }catch(...){
     isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Can not retrive element")));
   }
@@ -151,7 +161,7 @@ void stringLowLevelLibWrapper::regex(const FunctionCallbackInfo<Value>& args) {
     return;
   }  
 
-  bool regex;
+  bool regex=true;
   try{
     regex = obj->value_.regexVector((int) args[0]->IntegerValue(),*String::Utf8Value(args[1]->ToString()));
   }catch(...){
@@ -192,7 +202,7 @@ void stringLowLevelLibWrapper::chunk(const FunctionCallbackInfo<Value>& args) {
   stringLowLevelLibWrapper* obj = ObjectWrap::Unwrap<stringLowLevelLibWrapper>(args.Holder());
 
   try{
-    //args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
+     args.GetReturnValue().Set(String::NewFromUtf8(isolate, obj->value_.chunkData((int) args[0]->IntegerValue(), (int) args[1]->IntegerValue(), (int)args[2]->IntegerValue()).c_str()));
   }catch(...){
      isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Chunking exception")));
   }

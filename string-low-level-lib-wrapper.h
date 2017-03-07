@@ -17,6 +17,7 @@ class stringLowLevelLibWrapper : public node::ObjectWrap {
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);    
     static v8::Persistent<v8::Function> constructor;
     stringLowLevelLib  value_;
+    
 
     static void add(const v8::FunctionCallbackInfo<v8::Value>& args);
     static void append(const v8::FunctionCallbackInfo<v8::Value>& args);

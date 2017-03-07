@@ -30,14 +30,17 @@ describe('Native String Lookup Map', function() {
     });
 
     it('handle regex on right index', function() {
+
         expect(obj.regex(index, "a")).toBe(false);
         expect(obj.regex(index, "axx")).toBe(false);
         expect(obj.regex(index, "xxxxx")).toBe(false);
         expect(obj.regex(index, "x")).toBe(true);
         expect(obj.regex(index, "([ax])")).toBe(true);
         expect(obj.regex(index, "xxxx")).toBe(true);
+
     });
-    /*
+
+
     it('handle chunking and get on right index', function() {
         expect(obj.chunk(index, 0, 4)).toBe(obj.get(index));
         expect(obj.chunk(index, 0, 2)).toBe("xx");
@@ -61,41 +64,37 @@ describe('Native String Lookup Map', function() {
         expect(chunkMissingArgument).toThrow("Wrong number of arguments");
 
     });
-    */
+
 
     it('remove element', function() {
         obj.remove(index);
-
         expect(obj.size()).toBe(0);
         expect(obj.hasIndex(index)).toBe(false);
 
         expect(() => { obj.get(index); }).toThrow("Can not retrive element");
 
-        /*
-        let chunk = () => {
-            return obj.chunk(index, 1, 2);
-        };
-        expect(chunk).toThrow("Chunking exception");
-        */
+        expect(() => { obj.chunk(index, 1, 2) }).toThrow("Chunking exception");
 
-        expect(() => { obj.append(index, "ow No") }).toThrow();
+
+        expect(() => { obj.append(index, "ow No") }).toThrow("Can not append");
 
         expect(() => { obj.sizeAt(index) }).toThrow("Element does not exists");
     });
 
-    /*
-        it('handle chunking and get on wrong index', function() {
-            let method = () => {
-                obj.chunk(index, 0, 0);
-            }
 
-            expect(method).toThrow("Chunking exception");
-        });
-        */
+    it('handle chunking and get on wrong index', function() {
+        let method = () => {
+            obj.chunk(index, 0, 0);
+        }
+
+        expect(method).toThrow("Chunking exception");
+    });
+
 
     it('adding 2 elemnts', function() {
         index = obj.add('abc');
         indexSecondary = obj.add('zyxw');
+
         expect(index).toBe(1);
         expect(indexSecondary).toBe(2);
         expect(obj.hasIndex(index)).toBe(true);
@@ -104,6 +103,10 @@ describe('Native String Lookup Map', function() {
         expect(obj.get(indexSecondary)).toBe('zyxw');
         expect(obj.sizeAt(index)).toBe(3);
         expect(obj.sizeAt(indexSecondary)).toBe(4);
+        obj.append(index, "efg");
+        obj.append(indexSecondary, "rsty");
+        expect(obj.get(index)).toBe('abcefg');
+        expect(obj.get(indexSecondary)).toBe('zyxwrsty');
     });
 
     it('more regex checks', function() {
@@ -112,6 +115,7 @@ describe('Native String Lookup Map', function() {
         expect(obj.regex(index, "c")).toBe(true);
         expect(obj.regex(index, "([cba])")).toBe(true);
     });
+
 
     it('other exceptions', function() {
         expect(() => { obj.get() }).toThrow();
@@ -148,5 +152,6 @@ describe('Native String Lookup Map', function() {
         expect(obj.sizeAt(index)).toBe(0);
 
     });
+
 
 });
