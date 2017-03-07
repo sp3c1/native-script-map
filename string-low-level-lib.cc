@@ -64,14 +64,23 @@ bool stringLowLevelLib::regexVector(const int index, const  char regex[]){
 
 int stringLowLevelLib::removeVector(const int index){
     //exception handled by wrapper
+    int tmp = 0;
+
+    /* cause err on linux, and there is  no need now frankly
     try{
         strVec.at(index).clear();
         strVec.at(index).~string();
     }catch(...){
         
+    }*/
+
+    try{
+        tmp = strVec.erase(index);
+    }catch(...){
+
     }
     
-    return strVec.erase(index);
+    return tmp;
 }
 
 
@@ -112,8 +121,6 @@ int stringLowLevelLib::size(){
 int stringLowLevelLib::sizeAt(const int index){
     try{
         return (int) strVec.at(index).size();
-
-        //return (int) (strVec.at(index))->size();
     }catch(...){
         throw false;
     }
@@ -129,10 +136,12 @@ bool stringLowLevelLib::hasAt(const int index){
 }
 
 void stringLowLevelLib::clear(){
+    /* cause err on linux, and there is  no need now frankly
     for(auto &ent1 : strVec) {
         ent1.second.clear();
         ent1.second.~string();
     }
+    */
 
     strVec.clear();
 }
@@ -142,10 +151,12 @@ stringLowLevelLib::stringLowLevelLib(){
 }
 
 stringLowLevelLib::~stringLowLevelLib(){
+    /* cause err on linux, and there is  no need now frankly
     for(auto &ent1 : strVec) {
         ent1.second.clear();
         ent1.second.~string();
     }
+    */
 
     strVec.clear();
 }

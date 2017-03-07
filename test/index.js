@@ -140,7 +140,6 @@ describe('Native String Lookup Map', function() {
         expect(index).toBe(3);
         expect(obj.size()).toBe(1);
 
-        let sizeAt = obj.sizeAt(index);
         expect(obj.sizeAt(index)).toBe(0);
 
         expect(() => { obj.append(index, null) }).toThrow();
@@ -148,8 +147,34 @@ describe('Native String Lookup Map', function() {
         expect(() => { obj.append(index, false) }).toThrow();
         expect(() => { obj.append(index, 123) }).toThrow();
 
-        sizeAt = obj.sizeAt(index);
         expect(obj.sizeAt(index)).toBe(0);
+
+    });
+
+    it('get second instance', function() {
+        obj.add('a');
+        var objSecond = new addon.stringLowLevelLibWrapper();
+
+        expect(obj.size()).toBe(2);
+        expect(objSecond.size()).toBe(0);
+
+        objSecond.add("test");
+
+        expect(obj.size()).toBe(2);
+        expect(objSecond.size()).toBe(1);
+
+        objSecond.add("test");
+        expect(obj.size()).toBe(2);
+        expect(objSecond.size()).toBe(2);
+
+        obj.clear();
+        expect(obj.size()).toBe(0);
+        expect(objSecond.size()).toBe(2);
+
+        objSecond.clear();
+        expect(obj.size()).toBe(0);
+        expect(objSecond.size()).toBe(0);
+
 
     });
 
