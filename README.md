@@ -1,16 +1,17 @@
 # native-script-map
 Low level plugin for NodeJS that implements a hash string map that is sitting in C++, allows for regex and chunking, and whats more important direct memory menagement.
 
-# Current Goal
-I am moving it to `Nan` at the moment, with cross versiona and platform compilations in mind.
+# TODO
+Support for 4.x and 6.x on all platforms.
+
 
 # Test
 ```
 mocha test\index.js
 ```
 
-# Benachmark
-Most of the test, allocate large string or append an entry it multiple times. You can find them in `test` folder to see for yourself
+# Benchmark
+Most of the test, allocate large string or append an entry it multiple times. You can find them in `test` folder to see for yourself.
 ```
 cd test
 sh oneCheck.sh
