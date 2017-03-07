@@ -5,7 +5,13 @@
             "sources": ["string-low-level.cc", "string-low-level-lib.cc", "string-low-level-lib-wrapper.cc" ],
             "cflags!": [ '-fno-exceptions' ],
             "cflags_cc!": [ '-fno-exceptions' ],
+            "cflags" : [ "-std=c++1", "-stdlib=libc++" ],
             "conditions": [
+                [ 'OS!="mac"', {
+                    "cflags+": [ "-std=c++11" ],
+                    "cflags_c+": [ "-std=c++11" ],
+                    "cflags_cc+": [ "-std=c++11" ],
+                }],
                 ['OS=="mac"', {
                 'xcode_settings': {
                     'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
