@@ -147,11 +147,18 @@ void stringLowLevelLibWrapper::remove(const Nan::FunctionCallbackInfo<Value>& ar
     return;
   }
 
-  int removed = obj->value_.removeVector((int) args[0]->IntegerValue());
+  int removed = 0;
+
+  try{
+    removed = obj->value_.removeVector((int) args[0]->IntegerValue());
+  }catch(...){
+  }
   
   if(removed==0){
     Nan::ThrowError("Could not remove provided id");
+    return;
   }
+  return;
   
 }
 
