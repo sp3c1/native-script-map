@@ -9,6 +9,10 @@ Support for 4.x and 6.x on all platforms.
 ```
 mocha test\index.js
 ```
+or
+```
+node node_modules/.bin/mocha test/index.js
+```
 
 # Benchmark
 Most of the test, allocate large string or append an entry it multiple times. You can find them in `test` folder to see for yourself.
