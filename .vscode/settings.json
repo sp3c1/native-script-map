@@ -1,0 +1,10 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.associations": {
+        "tuple": "cpp",
+        "xutility": "cpp",
+        "exception": "cpp",
+        "regex": "cpp",
+        "xlocale": "cpp"
+    }
+}
