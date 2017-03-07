@@ -56,11 +56,6 @@ void stringLowLevelLibWrapper::New(const Nan::FunctionCallbackInfo<Value>& args)
     args.GetReturnValue().Set(args.This());
   } else {
     // Invoked as plain function `stringLowLevelLibWrapper(...)`, turn into construct call.
-    /*const int argc = 1;
-    Local<Value> argv[argc] = { args[0] };
-    v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-    args.GetReturnValue().Set(cons->NewInstance(argc, argv));*/
-
     const int argc = 1;
     Local<Value> argv[argc] = { args[0] };
     v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
